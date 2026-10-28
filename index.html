@@ -15,6 +15,235 @@
         .article-btn-die:hover { background-color: #db2777; }
         .article-btn-das { background-color: #064e3b; border: 1px solid rgba(16, 185, 129, 0.4); }
         .article-btn-das:hover { background-color: #059669; }
+        .plural-btn { background-color: #334155; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .plural-btn:hover { background-color: #475569; border-color: rgba(255, 255, 255, 0.2); }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-indigo-500/20">N</div>
+                <div>
+                    <div class="font-bold text-slate-100 text-lg leading-tight">Deutsch mit Natalia</div>
+                    <div class="text-xs text-indigo-400 font-medium">Wortschatz & Grammatik</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-800/80 border border-slate-700/60 px-4 py-1.5 rounded-full text-xs font-semibold text-slate-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="xp-counter">0 Punkte</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-3xl w-full mx-auto px-6 py-10 flex flex-col justify-center">
+        
+        <!-- Kategorie-Filter -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8" id="category-filters">
+            <button onclick="filterCategory('Alle')" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Alle Themen</button>
+            <button onclick="filterCategory('Menschen & Alltag')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Menschen</button>
+            <button onclick="filterCategory('Wohnen & Möbel')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Wohnen</button>
+            <button onclick="filterCategory('Essen & Trinken')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Essen & Trinken</button>
+            <button onclick="filterCategory('Arbeit & Büro')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Arbeit</button>
+        </div>
+
+        <!-- Main Flashcard -->
+        <div class="glass-card rounded-3xl p-8 sm:p-12 shadow-2xl text-center relative overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+            
+            <div id="category-label" class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2">Kategorie</div>
+            
+            <!-- Singular Wort -->
+            <div id="word-target" class="text-4xl sm:text-5xl font-black text-white tracking-tight mt-4 mb-2">...</div>
+            <div id="word-translation" class="text-slate-400 text-sm font-medium mb-6 italic">...</div>
+
+            <!-- SCHRITT 1: Artikel abfragen -->
+            <div id="step-article">
+                <div class="text-xs font-semibold text-slate-400 mb-3">1. Wähle den richtigen Artikel:</div>
+                <div class="grid grid-cols-3 gap-4 mb-6 max-w-md mx-auto">
+                    <button onclick="checkArticle('der')" class="article-btn-der py-3.5 rounded-2xl font-extrabold text-lg text-white transition-all transform active:scale-95 shadow-lg">der</button>
+                    <button onclick="checkArticle('die')" class="article-btn-die py-3.5 rounded-2xl font-extrabold text-lg text-white transition-all transform active:scale-95 shadow-lg">die</button>
+                    <button onclick="checkArticle('das')" class="article-btn-das py-3.5 rounded-2xl font-extrabold text-lg text-white transition-all transform active:scale-95 shadow-lg">das</button>
+                </div>
+            </div>
+
+            <!-- SCHRITT 2: Plural abfragen (wird nach richtigem Artikel eingeblendet) -->
+            <div id="step-plural" class="hidden">
+                <div class="text-xs font-semibold text-indigo-300 mb-3">2. Richtig! Wie lautet der Plural?</div>
+                <div id="plural-options" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 max-w-lg mx-auto">
+                    <!-- Wird dynamisch gefüllt -->
+                </div>
+            </div>
+
+            <div id="feedback-message" class="h-8 font-bold text-base transition-all duration-300"></div>
+        </div>
+
+        <!-- Info & Services Section -->
+        <div class="mt-10 glass-card rounded-2xl p-6 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <h3 class="text-sm font-bold text-white mb-1"><i class="fa-solid fa-graduation-cap text-indigo-400 mr-2"></i> Individuelles DaF-Coaching</h3>
+                <p class="text-slate-400 text-xs">Möchtest du systematisch Deutsch lernen oder professionelle Bewerbungen erstellen?</p>
+            </div>
+            <span class="text-xs bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 px-4 py-2 rounded-xl whitespace-nowrap font-semibold">Learn with Natalia</span>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+        &copy; Learn with Natalia – Alle Rechte vorbehalten.
+    </footer>
+
+    <script>
+        const allWords = [
+            { word: "Name", article: "der", plural: "die Namen", category: "Menschen & Alltag", translation: "name" },
+            { word: "Frau", article: "die", plural: "die Frauen", category: "Menschen & Alltag", translation: "woman" },
+            { word: "Mann", article: "der", plural: "die Männer", category: "Menschen & Alltag", translation: "man" },
+            { word: "Kind", article: "das", plural: "die Kinder", category: "Menschen & Alltag", translation: "child" },
+            { word: "Freund", article: "der", plural: "die Freunde", category: "Menschen & Alltag", translation: "friend" },
+            { word: "Sprache", article: "die", plural: "die Sprachen", category: "Menschen & Alltag", translation: "language" },
+            { word: "Tisch", article: "der", plural: "die Tische", category: "Wohnen & Möbel", translation: "table" },
+            { word: "Lampe", article: "die", plural: "die Lampen", category: "Wohnen & Möbel", translation: "lamp" },
+            { word: "Bett", article: "das", plural: "die Betten", category: "Wohnen & Möbel", translation: "bed" },
+            { word: "Schrank", article: "der", plural: "die Schränke", category: "Wohnen & Möbel", translation: "wardrobe / closet" },
+            { word: "Tür", article: "die", plural: "die Türen", category: "Wohnen & Möbel", translation: "door" },
+            { word: "Fenster", article: "das", plural: "die Fenster", category: "Wohnen & Möbel", translation: "window" },
+            { word: "Apfel", article: "der", plural: "die Äpfel", category: "Essen & Trinken", translation: "apple" },
+            { word: "Kaffee", article: "der", plural: "die Kaffees", category: "Essen & Trinken", translation: "coffee" },
+            { word: "Schokolade", article: "die", plural: "die Schokoladen", category: "Essen & Trinken", translation: "chocolate" },
+            { word: "Wasser", article: "das", plural: "die Wässer", category: "Essen & Trinken", translation: "water" },
+            { word: "Brötchen", article: "das", plural: "die Brötchen", category: "Essen & Trinken", translation: "bread roll" },
+            { word: "Computer", article: "der", plural: "die Computer", category: "Arbeit & Büro", translation: "computer" },
+            { word: "Stift", article: "der", plural: "die Stifte", category: "Arbeit & Büro", translation: "pen" },
+            { word: "Aufgabe", article: "die", plural: "die Aufgaben", category: "Arbeit & Büro", translation: "task / assignment" },
+            { word: "Büro", article: "das", plural: "die Büros", category: "Arbeit & Büro", translation: "office" }
+        ];
+
+        let activeCategory = "Alle";
+        let currentPool = [...allWords];
+        let currentIdx = 0;
+        let score = 0;
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            if (cat === "Alle") {
+                currentPool = [...allWords];
+            } else {
+                currentPool = allWords.filter(w => w.category === cat);
+            }
+            currentIdx = 0;
+            loadWord();
+        }
+
+        function loadWord() {
+            if (currentPool.length === 0) return;
+            const item = currentPool[currentIdx];
+            document.getElementById('word-target').innerText = item.word;
+            document.getElementById('word-translation').innerText = item.translation;
+            document.getElementById('category-label').innerText = item.category;
+            document.getElementById('feedback-message').innerText = '';
+            
+            // Ansicht auf Artikel-Abfrage zurücksetzen
+            document.getElementById('step-article').classList.remove('hidden');
+            document.getElementById('step-plural').classList.add('hidden');
+        }
+
+        function checkArticle(chosen) {
+            const item = currentPool[currentIdx];
+            const msg = document.getElementById('feedback-message');
+
+            if (chosen === item.article) {
+                msg.className = "h-8 font-bold text-base text-emerald-400";
+                msg.innerText = "Artikel richtig! (" + item.article + " " + item.word + ")";
+                score += 5;
+                document.getElementById('xp-counter').innerText = score + " Punkte";
+                
+                // Zum Plural-Schritt wechseln
+                setTimeout(() => {
+                    msg.innerText = "";
+                    document.getElementById('step-article').classList.add('hidden');
+                    document.getElementById('step-plural').classList.remove('hidden');
+                    setupPluralOptions(item);
+                }, 800);
+            } else {
+                msg.className = "h-8 font-bold text-base text-pink-500";
+                msg.innerText = "Falscher Artikel – versuche es noch einmal!";
+            }
+        }
+
+        function setupPluralOptions(item) {
+            const container = document.getElementById('plural-options');
+            container.innerHTML = '';
+
+            // Falsche Plural-Optionen generieren (aus anderen Wörtern oder Dummy-Endungen)
+            let options = [item.plural];
+            
+            while (options.length < 3) {
+                let randomWord = allWords[Math.floor(Math.random() * allWords.length)].plural;
+                if (!options.includes(randomWord)) {
+                    options.push(randomWord);
+                }
+            }
+
+            // Mischen, damit die richtige Antwort nicht immer an derselben Stelle steht
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "plural-btn py-3 px-4 rounded-xl font-bold text-sm text-white transition-all transform active:scale-95 shadow";
+                btn.innerText = opt;
+                btn.onclick = () => checkPlural(opt, item.plural);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkPlural(chosenPlural, correctPlural) {
+            const msg = document.getElementById('feedback-message');
+
+            if (chosenPlural === correctPlural) {
+                msg.className = "h-8 font-bold text-base text-emerald-400";
+                msg.innerText = "Super! Auch der Plural ist richtig: " + correctPlural + " 🎉";
+                score += 10;
+                document.getElementById('xp-counter').innerText = score + " Punkte";
+                setTimeout(() => {
+                    currentIdx = (currentIdx + 1) % currentPool.length;
+                    loadWord();
+                }, 1400);
+            } else {
+                msg.className = "h-8 font-bold text-base text-pink-500";
+                msg.innerText = "Leider falsch. Richtig ist: " + correctPlural;
+                setTimeout(() => {
+                    currentIdx = (currentIdx + 1) % currentPool.length;
+                    loadWord();
+                }, 1600);
+            }
+        }
+
+        loadWord();
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsch mit Natalia – Artikel- & Plural-Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .article-btn-der { background-color: #1e3a8a; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .article-btn-der:hover { background-color: #2563eb; }
+        .article-btn-die { background-color: #831843; border: 1px solid rgba(236, 72, 153, 0.4); }
+        .article-btn-die:hover { background-color: #db2777; }
+        .article-btn-das { background-color: #064e3b; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .article-btn-das:hover { background-color: #059669; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
 </head>
