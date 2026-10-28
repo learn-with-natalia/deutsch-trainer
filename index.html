@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deutsch mit Natalia – Interaktiver Artikel-Trainer</title>
+    <title>Deutsch mit Natalia – Artikel- & Plural-Trainer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .article-btn-der { background-color: #1e3a8a; border: 2 border border-blue-400/30; }
+        .article-btn-der { background-color: #1e3a8a; border: 1px solid rgba(59, 130, 246, 0.4); }
         .article-btn-der:hover { background-color: #2563eb; }
-        .article-btn-die { background-color: #831843; border: 2 border border-pink-400/30; }
+        .article-btn-die { background-color: #831843; border: 1px solid rgba(236, 72, 153, 0.4); }
         .article-btn-die:hover { background-color: #db2777; }
-        .article-btn-das { background-color: #064e3b; border: 2 border border-emerald-400/30; }
+        .article-btn-das { background-color: #064e3b; border: 1px solid rgba(16, 185, 129, 0.4); }
         .article-btn-das:hover { background-color: #059669; }
         .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
@@ -27,7 +27,7 @@
                 <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-black text-xl text-white shadow-lg shadow-indigo-500/20">N</div>
                 <div>
                     <div class="font-bold text-slate-100 text-lg leading-tight">Deutsch mit Natalia</div>
-                    <div class="text-xs text-indigo-400 font-medium">Sprachtraining & Coaching</div>
+                    <div class="text-xs text-indigo-400 font-medium">Wortschatz & Grammatik</div>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -40,46 +40,54 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 max-w-3xl w-full mx-auto px-6 py-12 flex flex-col justify-center">
+    <main class="flex-1 max-w-3xl w-full mx-auto px-6 py-10 flex flex-col justify-center">
         
-        <!-- Hero Title -->
-        <div class="text-center mb-10">
-            <span class="text-xs font-bold uppercase tracking-widest text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1 rounded-full">A1–A2 Wortschatz</span>
-            <h1 class="text-3xl font-extrabold text-white mt-4 mb-2">Artikel-Trainer</h1>
-            <p class="text-slate-400 text-sm">Bestimme den richtigen Artikel (der, die, das)</p>
+        <!-- Kategorie-Filter -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8" id="category-filters">
+            <button onclick="filterCategory('Alle')" class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Alle Themen</button>
+            <button onclick="filterCategory('Menschen & Alltag')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Menschen</button>
+            <button onclick="filterCategory('Wohnen & Möbel')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Wohnen</button>
+            <button onclick="filterCategory('Essen & Trinken')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Essen & Trinken</button>
+            <button onclick="filterCategory('Arbeit & Büro')" class="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-700 transition">Arbeit</button>
         </div>
 
         <!-- Main Flashcard -->
         <div class="glass-card rounded-3xl p-8 sm:p-12 shadow-2xl text-center relative overflow-hidden">
             <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
             
-            <div id="chapter-label" class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">...</div>
-            <div id="word-target" class="text-4xl sm:text-5xl font-black text-white tracking-tight my-6">...</div>
-            <div id="word-translation" class="text-slate-400 text-base font-medium mb-10 italic">...</div>
+            <div id="category-label" class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2">Kategorie</div>
+            
+            <!-- Singular Wort -->
+            <div id="word-target" class="text-4xl sm:text-5xl font-black text-white tracking-tight mt-4 mb-2">...</div>
+            <div id="word-translation" class="text-slate-400 text-sm font-medium mb-6 italic">...</div>
 
-            <!-- Action Buttons -->
+            <!-- Plural Abfrage Bereich -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl p-4 mb-8 max-w-md mx-auto">
+                <div class="text-xs font-semibold text-slate-400 mb-2">Wie lautet der Plural? (z.B. die Tische)</div>
+                <div class="flex gap-2">
+                    <input type="text" id="plural-input" placeholder="Plural eingeben..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <button onclick="checkPlural()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">Prüfen</button>
+                </div>
+            </div>
+
+            <!-- Artikel Buttons -->
+            <div class="text-xs font-semibold text-slate-400 mb-3">Wähle den richtigen Artikel:</div>
             <div class="grid grid-cols-3 gap-4 mb-6 max-w-md mx-auto">
-                <button onclick="checkAnswer('der')" class="article-btn-der py-4 rounded-2xl font-extrabold text-xl text-white transition-all transform active:scale-95 shadow-lg">der</button>
-                <button onclick="checkAnswer('die')" class="article-btn-die py-4 rounded-2xl font-extrabold text-xl text-white transition-all transform active:scale-95 shadow-lg">die</button>
-                <button onclick="checkAnswer('das')" class="article-btn-das py-4 rounded-2xl font-extrabold text-xl text-white transition-all transform active:scale-95 shadow-lg">das</button>
+                <button onclick="checkArticle('der')" class="article-btn-der py-3.5 rounded-2xl font-extrabold text-lg text-white transition-all transform active:scale-95 shadow-lg">der</button>
+                <button onclick="checkArticle('die')" class="article-btn-die py-3.5 rounded-2xl font-extrabold text-lg text-white transition-all transform active:scale-95 shadow-lg">die</button>
+                <button onclick="checkArticle('das')" class="article-btn-das py-3.5 rounded-2xl font-extrabold text-lg text-white transition-all transform active:scale-95 shadow-lg">das</button>
             </div>
 
             <div id="feedback-message" class="h-8 font-bold text-base transition-all duration-300"></div>
         </div>
 
         <!-- Info & Services Section -->
-        <div class="mt-12 glass-card rounded-2xl p-6 border border-slate-800">
-            <h3 class="text-base font-bold text-white mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-graduation-cap text-indigo-400"></i> Individual-Coaching & Kurse
-            </h3>
-            <p class="text-slate-400 text-sm mb-4 leading-relaxed">
-                Möchtest du deine Deutschkenntnisse gezielt vertiefen, dich auf Prüfungen vorbereiten oder professionelle Bewerbungsunterlagen erstellen lassen?
-            </p>
-            <div class="flex flex-wrap gap-3">
-                <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg">DaF-Unterricht</span>
-                <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg">Karriere-Coaching</span>
-                <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg">Bewerbungsservice</span>
+        <div class="mt-10 glass-card rounded-2xl p-6 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <h3 class="text-sm font-bold text-white mb-1"><i class="fa-solid fa-graduation-cap text-indigo-400 mr-2"></i> Individuelles DaF-Coaching</h3>
+                <p class="text-slate-400 text-xs">Möchtest du systematisch Deutsch lernen oder professionelle Bewerbungen erstellen?</p>
             </div>
+            <span class="text-xs bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 px-4 py-2 rounded-xl whitespace-nowrap font-semibold">Natalia Dolisni</span>
         </div>
     </main>
 
@@ -89,49 +97,114 @@
     </footer>
 
     <script>
-        const words = [
-            { word: "Name", article: "der", chapter: "Kapitel 1: Begrüßung", translation: "name" },
-            { word: "Sprache", article: "die", chapter: "Kapitel 1: Begrüßung", translation: "language" },
-            { word: "Wort", article: "das", chapter: "Kapitel 1: Begrüßung", translation: "word" },
-            { word: "Tisch", article: "der", chapter: "Kapitel 4: Wohnung", translation: "table" },
-            { word: "Lampe", article: "die", chapter: "Kapitel 4: Wohnung", translation: "lamp" },
-            { word: "Bett", article: "das", chapter: "Kapitel 4: Wohnung", translation: "bed" },
-            { word: "Kaffee", article: "der", chapter: "Kapitel 9: Essen & Trinken", translation: "coffee" },
-            { word: "Schokolade", article: "die", chapter: "Kapitel 9: Essen & Trinken", translation: "chocolate" },
-            { word: "Wasser", article: "das", chapter: "Kapitel 9: Essen & Trinken", translation: "water" }
+        // Umfangreiche Wortdatenbank mit Kategorien und Plural
+        const allWords = [
+            // Menschen & Alltag
+            { word: "Name", article: "der", plural: "die Namen", category: "Menschen & Alltag", translation: "name" },
+            { word: "Frau", article: "die", plural: "die Frauen", category: "Menschen & Alltag", translation: "woman" },
+            { word: "Mann", article: "der", plural: "die Männer", category: "Menschen & Alltag", translation: "man" },
+            { word: "Kind", article: "das", plural: "die Kinder", category: "Menschen & Alltag", translation: "child" },
+            { word: "Freund", article: "der", plural: "die Freunde", category: "Menschen & Alltag", translation: "friend" },
+            { word: "Sprache", article: "die", plural: "die Sprachen", category: "Menschen & Alltag", translation: "language" },
+            { word: "Mensch", article: "der", plural: "die Menschen", category: "Menschen & Alltag", translation: "human / person" },
+
+            // Wohnen & Möbel
+            { word: "Tisch", article: "der", plural: "die Tische", category: "Wohnen & Möbel", translation: "table" },
+            { word: "Lampe", article: "die", plural: "die Lampen", category: "Wohnen & Möbel", translation: "lamp" },
+            { word: "Bett", article: "das", plural: "die Betten", category: "Wohnen & Möbel", translation: "bed" },
+            { word: "Schrank", article: "der", plural: "die Schränke", category: "Wohnen & Möbel", translation: "wardrobe / closet" },
+            { word: "Tür", article: "die", plural: "die Türen", category: "Wohnen & Möbel", translation: "door" },
+            { word: "Fenster", article: "das", plural: "die Fenster", category: "Wohnen & Möbel", translation: "window" },
+            { word: "Stuhl", article: "der", plural: "die Stühle", category: "Wohnen & Möbel", translation: "chair" },
+            { word: "Teppich", article: "der", plural: "die Teppiche", category: "Wohnen & Möbel", translation: "carpet" },
+
+            // Essen & Trinken
+            { word: "Apfel", article: "der", plural: "die Äpfel", category: "Essen & Trinken", translation: "apple" },
+            { word: "Kaffee", article: "der", plural: "die Kaffees", category: "Essen & Trinken", translation: "coffee" },
+            { word: "Schokolade", article: "die", plural: "die Schokoladen", category: "Essen & Trinken", translation: "chocolate" },
+            { word: "Wasser", article: "das", plural: "die Wässer", category: "Essen & Trinken", translation: "water" },
+            { word: "Brötchen", article: "das", plural: "die Brötchen", category: "Essen & Trinken", translation: "bread roll" },
+            { word: "Fisch", article: "der", plural: "die Fische", category: "Essen & Trinken", translation: "fish" },
+            { word: "Milch", article: "die", plural: "die Milchen", category: "Essen & Trinken", translation: "milk" },
+            { word: "Ei", article: "das", plural: "die Eier", category: "Essen & Trinken", translation: "egg" },
+
+            // Arbeit & Büro
+            { word: "Computer", article: "der", plural: "die Computer", category: "Arbeit & Büro", translation: "computer" },
+            { word: "Stift", article: "der", plural: "die Stifte", category: "Arbeit & Büro", translation: "pen" },
+            { word: "Aufgabe", article: "die", plural: "die Aufgaben", category: "Arbeit & Büro", translation: "task / assignment" },
+            { word: "Büro", article: "das", plural: "die Büros", category: "Arbeit & Büro", translation: "office" },
+            { word: "Chef", article: "der", plural: "die Chefs", category: "Arbeit & Büro", translation: "boss" },
+            { word: "Firma", article: "die", plural: "die Firmen", category: "Arbeit & Büro", translation: "company" },
+            { word: "Papier", article: "das", plural: "die Papiere", category: "Arbeit & Büro", translation: "paper" }
         ];
 
+        let activeCategory = "Alle";
+        let currentPool = [...allWords];
         let currentIdx = 0;
         let score = 0;
 
-        function displayWord() {
-            const item = words[currentIdx];
+        function filterCategory(cat) {
+            activeCategory = cat;
+            if (cat === "Alle") {
+                currentPool = [...allWords];
+            } else {
+                currentPool = allWords.filter(w => w.category === cat);
+            }
+            currentIdx = 0;
+            loadWord();
+        }
+
+        function loadWord() {
+            if (currentPool.length === 0) return;
+            const item = currentPool[currentIdx];
             document.getElementById('word-target').innerText = item.word;
             document.getElementById('word-translation').innerText = item.translation;
-            document.getElementById('chapter-label').innerText = item.chapter;
+            document.getElementById('category-label').innerText = item.category;
+            document.getElementById('plural-input').value = '';
             document.getElementById('feedback-message').innerText = '';
         }
 
-        function checkAnswer(chosen) {
-            const item = words[currentIdx];
+        function checkArticle(chosen) {
+            const item = currentPool[currentIdx];
             const msg = document.getElementById('feedback-message');
 
             if (chosen === item.article) {
                 msg.className = "h-8 font-bold text-base text-emerald-400";
-                msg.innerText = "Ausgezeichnet! ✓ (" + item.article + " " + item.word + ")";
+                msg.innerText = "Richtig! ✓ (" + item.article + " " + item.word + ")";
                 score += 10;
                 document.getElementById('xp-counter').innerText = score + " Punkte";
                 setTimeout(() => {
-                    currentIdx = (currentIdx + 1) % words.length;
-                    displayWord();
-                }, 1200);
+                    currentIdx = (currentIdx + 1) % currentPool.length;
+                    loadWord();
+                }, 1300);
             } else {
                 msg.className = "h-8 font-bold text-base text-pink-500";
-                msg.innerText = "Nicht ganz – versuche es noch einmal!";
+                msg.innerText = "Falscher Artikel – versuche es noch einmal!";
             }
         }
 
-        displayWord();
+        function checkPlural() {
+            const item = currentPool[currentIdx];
+            const msg = document.getElementById('feedback-message');
+            const userPlural = document.getElementById('plural-input').value.trim().toLowerCase();
+            const correctPlural = item.plural.toLowerCase();
+
+            if (userPlural === correctPlural) {
+                msg.className = "h-8 font-bold text-base text-emerald-400";
+                msg.innerText = "Super! Plural ist korrekt: " + item.plural;
+                score += 15;
+                document.getElementById('xp-counter').innerText = score + " Punkte";
+                setTimeout(() => {
+                    currentIdx = (currentIdx + 1) % currentPool.length;
+                    loadWord();
+                }, 1500);
+            } else {
+                msg.className = "h-8 font-bold text-base text-pink-500";
+                msg.innerText = "Nicht ganz. Richtig wäre: " + item.plural;
+            }
+        }
+
+        loadWord();
     </script>
 </body>
 </html>
